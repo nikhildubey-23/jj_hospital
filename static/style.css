@@ -417,15 +417,7 @@ section.py-5.pb-3 {
     background: linear-gradient(135deg, var(--danger) 0%, var(--primary-dark) 100%);
 }
 
-.emergency-banner-top {
-    position: sticky;
-    top: 0;
-    z-index: 1030;
-}
 
-.navbar.fixed-top {
-    top: auto;
-}
 
 footer {
     padding-top: 80px;
