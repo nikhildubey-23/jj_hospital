@@ -1,0 +1,56 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<div class="table-container mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <h5 class="fw-bold m-0"><i class="fas fa-clipboard-list me-2 text-success"></i>Today's Attendance</h5>
+        <form method="GET" class="d-flex gap-2 align-items-center">
+            <label class="form-label m-0">Date:</label>
+            <input type="date" name="filter_date" class="form-control form-control-sm" value="{{ filter_date }}" onchange="this.form.submit()">
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Department</th>
+                    <th>Attendance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in staff_list %}
+                <tr>
+                    <td>{{ s.id }}</td>
+                    <td><strong>{{ s.name }}</strong></td>
+                    <td>{{ s.position or '-' }}</td>
+                    <td>{{ s.department or '-' }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('mark_attendance') }}" class="d-flex gap-2 align-items-center">
+                            <input type="hidden" name="staff_id" value="{{ s.id }}">
+                            <input type="hidden" name="date" value="{{ filter_date }}">
+                            <select name="status" class="form-select form-select-sm" style="width:140px;" onchange="this.form.submit()">
+                                <option value="">-- Select --</option>
+                                <option value="Present" {% if attendance_records[s.id] == 'Present' %}selected{% endif %}>Present</option>
+                                <option value="Absent" {% if attendance_records[s.id] == 'Absent' %}selected{% endif %}>Absent</option>
+                                <option value="Leave" {% if attendance_records[s.id] == 'Leave' %}selected{% endif %}>Leave</option>
+                            </select>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% if not staff_list %}
+                <tr><td colspan="5" class="text-center text-muted py-5">Add staff members first</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="text-center">
+    <a href="{{ url_for('attendance_report') }}?from_date={{ filter_date }}&to_date={{ filter_date }}" class="btn btn-outline-success">
+        <i class="fas fa-file-alt me-1"></i> View Attendance Report
+    </a>
+</div>
+{% endblock %}

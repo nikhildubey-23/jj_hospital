@@ -1,0 +1,50 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<div class="table-container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <h5 class="fw-bold m-0"><i class="fas fa-users me-2 text-success"></i>Staff Members</h5>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('add_staff') }}" class="btn btn-success btn-sm"><i class="fas fa-plus me-1"></i> Add Staff</a>
+            <a href="{{ url_for('export_staff_csv') }}" class="btn btn-outline-success btn-sm"><i class="fas fa-download"></i> CSV</a>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Position</th>
+                    <th>Department</th>
+                    <th>Joining Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in staff_list %}
+                <tr>
+                    <td>{{ s.id }}</td>
+                    <td><strong>{{ s.name }}</strong></td>
+                    <td>{{ s.phone or '-' }}</td>
+                    <td>{{ s.email or '-' }}</td>
+                    <td>{{ s.position or '-' }}</td>
+                    <td>{{ s.department or '-' }}</td>
+                    <td>{{ s.joining_date or '-' }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_staff', id=s.id) }}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fas fa-edit"></i></a>
+                        <form method="POST" action="{{ url_for('delete_staff', id=s.id) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete {{ s.name }}?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% if not staff_list %}
+                <tr><td colspan="8" class="text-center text-muted py-5">No staff members added yet</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

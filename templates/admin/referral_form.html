@@ -1,0 +1,56 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<div class="form-card">
+    <h5 class="fw-bold mb-4">
+        {% if referral %}
+        <i class="fas fa-edit me-2 text-danger"></i>Edit Referral
+        {% else %}
+        <i class="fas fa-plus-circle me-2 text-danger"></i>New Referral
+        {% endif %}
+    </h5>
+    <form method="POST">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Patient Name <span class="text-danger">*</span></label>
+                <input type="text" name="patient_name" class="form-control" value="{{ referral.patient_name if referral else '' }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Phone</label>
+                <input type="text" name="phone" class="form-control" value="{{ referral.phone if referral else '' }}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Referral Type <span class="text-danger">*</span></label>
+                <select name="referral_type" class="form-select" required>
+                    <option value="">-- Select --</option>
+                    {% for t in types %}
+                    <option value="{{ t }}" {% if referral and referral.referral_type == t %}selected{% endif %}>{{ t }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Charge (₹)</label>
+                <input type="number" step="0.01" name="charge" class="form-control" value="{{ referral.charge if referral else '0' }}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Doctor Name</label>
+                <input type="text" name="doctor_name" class="form-control" value="{{ referral.doctor_name if referral else '' }}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Date</label>
+                <input type="date" name="referral_date" class="form-control" value="{{ referral.referral_date if referral else '' }}">
+            </div>
+            <div class="col-12">
+                <label class="form-label">Notes</label>
+                <textarea name="notes" class="form-control" rows="3">{{ referral.notes if referral else '' }}</textarea>
+            </div>
+            <div class="col-12 mt-4">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-save me-1"></i>
+                    {% if referral %}Update{% else %}Save{% endif %}
+                </button>
+                <a href="{{ url_for('admin_referrals') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

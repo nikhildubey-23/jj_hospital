@@ -1,0 +1,51 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<div class="form-card">
+    <h5 class="fw-bold mb-4">
+        {% if staff %}
+        <i class="fas fa-edit me-2 text-success"></i>Edit Staff
+        {% else %}
+        <i class="fas fa-user-plus me-2 text-success"></i>Add New Staff
+        {% endif %}
+    </h5>
+    <form method="POST">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Name <span class="text-danger">*</span></label>
+                <input type="text" name="name" class="form-control" value="{{ staff.name if staff else '' }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Phone</label>
+                <input type="text" name="phone" class="form-control" value="{{ staff.phone if staff else '' }}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" value="{{ staff.email if staff else '' }}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Position</label>
+                <input type="text" name="position" class="form-control" value="{{ staff.position if staff else '' }}" placeholder="e.g. Doctor, Nurse, Staff">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Department</label>
+                <input type="text" name="department" class="form-control" value="{{ staff.department if staff else '' }}" placeholder="e.g. Cardiology, Emergency">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Joining Date</label>
+                <input type="date" name="joining_date" class="form-control" value="{{ staff.joining_date if staff else '' }}">
+            </div>
+            <div class="col-12">
+                <label class="form-label">Address</label>
+                <textarea name="address" class="form-control" rows="2">{{ staff.address if staff else '' }}</textarea>
+            </div>
+            <div class="col-12 mt-4">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save me-1"></i>
+                    {% if staff %}Update{% else %}Save{% endif %}
+                </button>
+                <a href="{{ url_for('admin_staff') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

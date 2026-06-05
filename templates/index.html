@@ -1,533 +1,388 @@
 {% extends 'base.html' %}
 
-{% block head %}
-    <style>
-    #hero-canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-    }
-    .hero-section {
-        position: relative;
-        min-height: 100vh;
-        overflow: hidden;
-        background-image: url("{{ url_for('static', filename='image/hospital.jpg') }}");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-    .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, rgba(25, 135, 84, 0.85) 0%, rgba(13, 110, 253, 0.85) 100%);
-        z-index: 2;
-    }
-    .hero-content {
-        position: relative;
-        z-index: 3;
-        padding-top: 100px;
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<section id="home" class="hero-section d-flex align-items-center">
-    <canvas id="hero-canvas"></canvas>
-    <div class="hero-overlay"></div>
-    <div class="container hero-content">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="badge bg-warning text-dark mb-4 px-4 py-3">
-                    <i class="fas fa-clock me-2"></i> 24/7 Emergency Services Available
-                </div>
-                <h1 class="display-3 fw-bold text-white mb-4">JJ Hospital</h1>
-                <h2 class="h3 text-white mb-4 fw-normal">Comprehensive Healthcare You Can Trust</h2>
-                <p class="lead text-white mb-5 opacity-75">
-                    <i class="fas fa-map-marker-alt me-2"></i>
-                    Gurunanak Chowk, Arpa Bridge Road, Towa, Bilaspur (C.G.)
-                </p>
-                <div class="d-flex flex-wrap gap-3 mb-5">
-                    <a href="tel:9991991248" class="btn btn-warning btn-lg shadow">
-                        <i class="fas fa-phone-alt me-2"></i>Call Now
-                    </a>
-                    <a href="#services" class="btn btn-outline-light btn-lg">
-                        <i class="fas fa-stethoscope me-2"></i>Our Services
-                    </a>
-                </div>
-                <div class="row g-5 hero-stats mt-4">
-                    <div class="col-4">
-                        <div class="text-center">
-                            <div class="display-4 fw-bold text-warning">24/7</div>
-                            <p class="text-white mb-0 fs-5">Emergency Care</p>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="text-center">
-                            <div class="display-4 fw-bold text-warning">100+</div>
-                            <p class="text-white mb-0 fs-5">Beds</p>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="text-center">
-                            <div class="display-4 fw-bold text-warning">15+</div>
-                            <p class="text-white mb-0 fs-5">Specialists</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+<!-- ═══ Hero Section ═══ -->
+<section class="hero-section" id="home">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-overlay"></div>
+
+  <div class="container">
+    <div class="row">
+      <div class="hero-text">
+        <div class="hero-badge anim-hidden anim-visible" data-delay="0">
+          <i class="fas fa-heartbeat"></i>
+          Excellence in Healthcare Since 1998
         </div>
+
+        <h1 class="hero-title anim-hidden anim-visible" data-delay="0.1">
+          Your Health Is <span class="highlight">Our Priority</span>
+        </h1>
+
+        <p class="hero-desc anim-hidden anim-visible" data-delay="0.2">
+          Experience world-class healthcare with cutting-edge technology,
+          compassionate doctors, and personalized treatment plans
+          tailored just for you.
+        </p>
+
+        <div class="hero-actions anim-hidden anim-visible" data-delay="0.3">
+          <a href="{{ url_for('booking_page') }}" class="btn btn-accent">
+            <i class="fas fa-calendar-plus"></i> Book Appointment
+          </a>
+          <a href="#services" class="btn btn-ghost">
+            <i class="fas fa-play-circle"></i> Our Services
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual anim-hidden anim-visible" data-delay="0.4">
+        <div class="hero-stats-card">
+          <div class="hero-stats-grid">
+            <div class="hero-stat-item">
+              <i class="fas fa-ambulance"></i>
+              <div class="hero-stat-value">24/7</div>
+              <div class="hero-stat-label">Emergency Care</div>
+            </div>
+            <div class="hero-stat-item">
+              <i class="fas fa-bed"></i>
+              <div class="hero-stat-value">100+</div>
+              <div class="hero-stat-label">Patient Beds</div>
+            </div>
+            <div class="hero-stat-item">
+              <i class="fas fa-user-md"></i>
+              <div class="hero-stat-value">15+</div>
+              <div class="hero-stat-label">Specialists</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <a href="#about" class="scroll-down position-absolute bottom-0 start-50 translate-middle-x mb-5">
-        <i class="fas fa-chevron-down fa-2x text-white"></i>
-    </a>
+  </div>
+
+  <div class="scroll-down" onclick="document.getElementById('about')?.scrollIntoView({behavior:'smooth'})">
+    <i class="fas fa-chevron-down"></i>
+  </div>
 </section>
 
-<section id="about" class="py-5 bg-light">
-    <div class="container py-5">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-6">
-                <div class="position-relative">
-                    <img src="{{ url_for('static', filename='image/main_gate_img_2.jpeg') }}" class="img-fluid rounded-4 shadow-lg" alt="Hospital Main Gate" style="width: 100%; height: 500px; object-fit: cover;">
-                    <div class="position-absolute bottom-0 start-0 w-50 p-4 bg-primary rounded-end rounded-bottom">
-                        <h5 class="mb-0 text-white fw-bold"><i class="fas fa-award me-2"></i>Licensed Hospital</h5>
-                        <small class="text-white opacity-75">BILA0467/HOS</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="badge bg-primary text-white px-4 py-3 mb-4">About Us</div>
-                <h2 class="display-6 fw-bold mb-4">Your Health, Our Priority</h2>
-                <p class="lead text-muted mb-4">JJ Hospital is a premier healthcare facility committed to providing exceptional medical services to the community of Bilaspur and surrounding areas.</p>
-                <p class="text-muted mb-4">Our hospital offers comprehensive 24/7 emergency medical services with state-of-the-art facilities to ensure the highest level of patient care. We specialize in a wide range of treatments and diagnostics.</p>
-                
-                <div class="row g-3 mt-5 about-features">
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm">
-                            <i class="fas fa-check-circle text-primary me-3"></i>
-                            <div>
-                                <h6 class="mb-1 fw-semibold">Emergency Care</h6>
-                                <small class="text-muted">24/7 Available</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm">
-                            <i class="fas fa-check-circle text-primary me-3"></i>
-                            <div>
-                                <h6 class="mb-1 fw-semibold">Modern Equipment</h6>
-                                <small class="text-muted">Latest Technology</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm">
-                            <i class="fas fa-check-circle text-primary me-3"></i>
-                            <div>
-                                <h6 class="mb-1 fw-semibold">Experienced Staff</h6>
-                                <small class="text-muted">Qualified Professionals</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="d-flex align-items-center p-3 bg-white rounded-3 shadow-sm">
-                            <i class="fas fa-check-circle text-primary me-3"></i>
-                            <div>
-                                <h6 class="mb-1 fw-semibold">Patient Comfort</h6>
-                                <small class="text-muted">AC Rooms Available</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+<!-- ═══ Stats Section ═══ -->
+<section class="stats-section" id="about">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="anim-hidden" data-delay="0">
+        <div class="stat-icon-box"><i class="fas fa-hospital"></i></div>
+        <div class="stat-number"><span class="counter" data-target="28">0</span>+</div>
+        <div class="stat-label">Years of Service</div>
+      </div>
+      <div class="anim-hidden" data-delay="0.1">
+        <div class="stat-icon-box"><i class="fas fa-user-md"></i></div>
+        <div class="stat-number"><span class="counter" data-target="15">0</span>+</div>
+        <div class="stat-label">Expert Doctors</div>
+      </div>
+      <div class="anim-hidden" data-delay="0.2">
+        <div class="stat-icon-box"><i class="fas fa-bed"></i></div>
+        <div class="stat-number"><span class="counter" data-target="100">0</span>+</div>
+        <div class="stat-label">Patient Beds</div>
+      </div>
+      <div class="anim-hidden" data-delay="0.3">
+        <div class="stat-icon-box"><i class="fas fa-smile"></i></div>
+        <div class="stat-number"><span class="counter" data-target="50">0</span>K+</div>
+        <div class="stat-label">Happy Patients</div>
+      </div>
     </div>
+  </div>
 </section>
 
-<section id="director" class="py-5">
-    <div class="container py-5">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-5">
-                <div class="text-center">
-                    <div class="position-relative d-inline-block">
-                        <img src="{{ url_for('static', filename='image/dr.r.d.gupta.jpeg') }}" class="img-fluid rounded-circle shadow-lg director-img" alt="Dr. R.D Gupta">
-                        <div class="position-absolute bottom-0 end-0 bg-primary text-white p-4 rounded-circle">
-                            <i class="fas fa-user-md fa-2x"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-7 director-section">
-                <div class="badge bg-warning text-dark px-4 py-3 mb-3">Medical Director</div>
-                <h2 class="display-6 fw-bold mb-2">Dr. R.D Gupta</h2>
-                <p class="text-primary fw-semibold fs-5 mb-4">Director, JJ Hospital</p>
-                <blockquote class="blockquote border-start border-4 border-primary ps-4">
-                    <p class="fs-4 fst-italic text-muted">"At JJ Hospital, we believe in providing compassionate, comprehensive healthcare to every patient. Our commitment to excellence drives us to continuously improve our facilities and services."</p>
-                </blockquote>
-                <p class="text-muted mt-4 mb-4 fs-5">With years of experience in healthcare management, Dr. R.D Gupta has led JJ Hospital to become one of the most trusted healthcare providers in the Bilaspur region, ensuring quality medical care for all.</p>
-                <div class="mt-4">
-                    <a href="#contact" class="btn btn-primary btn-lg">
-                        <i class="fas fa-calendar-check me-2"></i>Book Appointment
-                    </a>
-                </div>
-            </div>
+
+<!-- ═══ About Section ═══ -->
+<section style="background: var(--bg-light);">
+  <div class="container">
+    <div style="display: flex; align-items: center; gap: 60px; flex-wrap: wrap;" class="about-wrapper">
+      <div class="anim-hidden anim-left" data-delay="0" style="flex: 1 1 400px;">
+        <div style="position: relative; border-radius: 32px; overflow: hidden; box-shadow: var(--shadow-xl);">
+          <img src="{{ url_for('static', filename='image/hospital.jpg') }}" alt="JJ Hospital"
+               class="about-img" style="width: 100%; height: 500px; object-fit: cover; display: block;">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(13,61,56,0.9)); padding: 40px;">
+            <div style="color: white; font-size: 14px; font-weight: 600; letter-spacing: 1px; margin-bottom: 4px;">EST. 1998</div>
+            <div style="color: white; font-size: 20px; font-weight: 700;">28+ Years of Healthcare Excellence</div>
+          </div>
         </div>
+      </div>
+
+      <div class="anim-hidden anim-right" data-delay="0.1" style="flex: 1 1 400px;">
+        <span class="section-label"><i class="fas fa-info-circle"></i> About Us</span>
+        <h2 class="section-title">Providing Quality Healthcare<br>for Over 28 Years</h2>
+        <p style="color: var(--text-muted); font-size: 16px; line-height: 1.8; margin-bottom: 32px;">
+          JJ Hospital has been a beacon of hope and healing in Bilaspur, Chhattisgarh,
+          since 1998. We combine medical expertise with cutting-edge technology to
+          provide comprehensive healthcare services to our community.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="about-feat-item anim-hidden" data-delay="0.1">
+            <div class="about-feat-icon"><i class="fas fa-ambulance"></i></div>
+            <div>
+              <div class="about-feat-title">24/7 Emergency</div>
+              <div class="about-feat-desc">Round-the-clock emergency services with rapid response teams.</div>
+            </div>
+          </div>
+          <div class="about-feat-item anim-hidden" data-delay="0.2">
+            <div class="about-feat-icon"><i class="fas fa-microscope"></i></div>
+            <div>
+              <div class="about-feat-title">Modern Equipment</div>
+              <div class="about-feat-desc">State-of-the-art diagnostic and treatment equipment.</div>
+            </div>
+          </div>
+          <div class="about-feat-item anim-hidden" data-delay="0.3">
+            <div class="about-feat-icon"><i class="fas fa-user-md"></i></div>
+            <div>
+              <div class="about-feat-title">Expert Doctors</div>
+              <div class="about-feat-desc">Highly qualified and experienced medical professionals.</div>
+            </div>
+          </div>
+          <div class="about-feat-item anim-hidden" data-delay="0.4">
+            <div class="about-feat-icon"><i class="fas fa-heart"></i></div>
+            <div>
+              <div class="about-feat-title">Compassionate Care</div>
+              <div class="about-feat-desc">Patient-first approach with personalized treatment plans.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
+  </div>
 </section>
 
-<section id="services" class="py-5 bg-light">
-    <div class="container py-5">
-        <div class="text-center mb-5">
-            <div class="badge bg-primary text-white px-4 py-3 mb-4">Our Services</div>
-            <h2 class="display-6 fw-bold section-title">Comprehensive Medical Services</h2>
-            <p class="lead text-muted mx-auto section-subtitle" style="max-width: 700px;">We offer a wide range of medical services to meet all your healthcare needs</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-0 shadow service-card">
-                    <div class="card-body p-5 text-center">
-                        <div class="icon-box bg-danger bg-opacity-10 rounded-circle mx-auto mb-4">
-                            <i class="fas fa-ambulance text-danger"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">24/7 Emergency</h4>
-                        <p class="text-muted mb-0">Fully equipped emergency medical services available round the clock with trained staff.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-0 shadow service-card">
-                    <div class="card-body p-5 text-center">
-                        <div class="icon-box bg-danger bg-opacity-10 rounded-circle mx-auto mb-4">
-                            <i class="fas fa-heartbeat" style="font-size: 3.5rem; color: #dc3545;"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">Cardiac Care</h4>
-                        <p class="text-muted mb-0">Advanced ECG and cardiac monitoring systems for comprehensive heart care.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-0 shadow service-card">
-                    <div class="card-body p-5 text-center">
-                        <div class="icon-box bg-success bg-opacity-10 rounded-circle mx-auto mb-4">
-                            <i class="fas fa-lungs fa-2x text-success"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">ICU & Ventilator</h4>
-                        <p class="text-muted mb-0">Advanced ICU designed for cardiac and critically ill patients with ventilator support.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-0 shadow service-card">
-                    <div class="card-body p-5 text-center">
-                        <div class="icon-box bg-warning bg-opacity-10 rounded-circle mx-auto mb-4">
-                            <i class="fas fa-bone fa-2x text-warning"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">Orthopedics</h4>
-                        <p class="text-muted mb-0">Fracture and bone surgeries using advanced C-Arm technology.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-0 shadow service-card">
-                    <div class="card-body p-5 text-center">
-                        <div class="icon-box bg-info bg-opacity-10 rounded-circle mx-auto mb-4">
-                            <i class="fas fa-baby fa-2x text-info"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">Maternity Care</h4>
-                        <p class="text-muted mb-0">Comprehensive maternity and gynecological procedures with expert care.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-0 shadow service-card">
-                    <div class="card-body p-5 text-center">
-                        <div class="icon-box bg-success bg-opacity-10 rounded-circle mx-auto mb-4">
-                            <i class="fas fa-tint" style="font-size: 3.5rem; color: #198754;"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">Urology</h4>
-                        <p class="text-muted mb-0">Minimally invasive endoscopic treatment for kidney stones and comprehensive urology care.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+<!-- ═══ Certificate Section ═══ -->
+<section id="certificate" style="background: var(--bg-light);">
+  <div class="container">
+    <div class="anim-hidden" data-delay="0" style="text-align: center; margin-bottom: 50px;">
+      <span class="section-label"><i class="fas fa-award"></i> Accreditation</span>
+      <h2 class="section-title">Our ISO Certification</h2>
+      <p class="section-subtitle" style="margin: 0 auto;">
+        JJ Hospital is proud to be ISO certified, reflecting our commitment to international quality standards in healthcare.
+      </p>
     </div>
+
+    <div class="anim-hidden" data-delay="0.1" style="text-align: center;">
+      <img src="{{ url_for('static', filename='image/certificate.png') }}" alt="ISO Certification"
+           style="max-width: 100%; width: 600px; border-radius: 16px; box-shadow: var(--shadow-xl);">
+    </div>
+  </div>
 </section>
 
-<section id="facilities" class="py-5">
-    <div class="container py-5">
-        <div class="text-center mb-5">
-            <div class="badge bg-primary text-white px-4 py-3 mb-4">Our Facilities</div>
-            <h2 class="display-6 fw-bold section-title">World-Class Infrastructure</h2>
-            <p class="lead text-muted mx-auto section-subtitle" style="max-width: 700px;">Modern facilities designed for patient comfort and best medical care</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-lg-3 col-md-6">
-                <div class="card border-0 shadow-sm facility-card h-100">
-                    <img src="{{ url_for('static', filename='image/icu.jpeg') }}" class="card-img-top" alt="ICU" style="height: 280px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <h5 class="fw-bold mb-2"><i class="fas fa-procedures me-2 text-primary"></i>ICU</h5>
-                        <p class="text-muted mb-0">Advanced Intensive Care Unit for critical patients</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="card border-0 shadow-sm facility-card h-100">
-                    <img src="{{ url_for('static', filename='image/vantilator&dialasis_meachine.jpeg') }}" class="card-img-top" alt="Ventilator & Dialysis" style="height: 280px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <h5 class="fw-bold mb-2"><i class="fas fa-lungs me-2 text-primary"></i>Ventilator & Dialysis</h5>
-                        <p class="text-muted mb-0">Life support and kidney treatment facilities</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="card border-0 shadow-sm facility-card h-100">
-                    <img src="{{ url_for('static', filename='image/hospital_bed.jpeg') }}" class="card-img-top" alt="Patient Rooms" style="height: 280px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <h5 class="fw-bold mb-2"><i class="fas fa-bed me-2 text-primary"></i>Patient Rooms</h5>
-                        <p class="text-muted mb-0">General wards, private & AC rooms available</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="card border-0 shadow-sm facility-card h-100">
-                    <img src="{{ url_for('static', filename='image/x_ray_room.jpeg') }}" class="card-img-top" alt="X-Ray" style="height: 280px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <h5 class="fw-bold mb-2"><i class="fas fa-x-ray me-2 text-primary"></i>X-Ray Room</h5>
-                        <p class="text-muted mb-0">Modern digital X-ray diagnostic services</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="card border-0 shadow-sm facility-card h-100">
-                    <img src="{{ url_for('static', filename='image/minor_ot.jpeg') }}" class="card-img-top" alt="Operation Theatre" style="height: 280px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <h5 class="fw-bold mb-2"><i class="fas fa-scalpel me-2 text-primary"></i>Operation Theatre</h5>
-                        <p class="text-muted mb-0">Modern operation theatre with advanced equipment</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="card border-0 shadow-sm facility-card h-100">
-                    <img src="{{ url_for('static', filename='image/reception.jpeg') }}" class="card-img-top" alt="Reception" style="height: 280px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <h5 class="fw-bold mb-2"><i class="fas fa-desktop me-2 text-primary"></i>Reception</h5>
-                        <p class="text-muted mb-0">24/7 reception and patient inquiry services</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="card border-0 shadow-sm facility-card h-100">
-                    <img src="{{ url_for('static', filename='image/lift_facility.jpeg') }}" class="card-img-top" alt="Lift Facility" style="height: 280px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <h5 class="fw-bold mb-2"><i class="fas fa-elevator me-2 text-primary"></i>Lift Facility</h5>
-                        <p class="text-muted mb-0">Easy access to all floors for patients</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="card border-0 shadow-sm facility-card h-100">
-                    <img src="{{ url_for('static', filename='image/ambulance.jpeg') }}" class="card-img-top" alt="Ambulance" style="height: 280px; object-fit: cover;">
-                    <div class="card-body p-4">
-                        <h5 class="fw-bold mb-2"><i class="fas fa-ambulance me-2 text-primary"></i>24×7 Ambulance</h5>
-                        <p class="text-muted mb-0">Emergency ambulance service available round the clock</p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="row mt-5 g-4">
-            <div class="col-md-6">
-                <div class="p-5 bg-white rounded-4 shadow-sm facility-list-card">
-                    <h4 class="fw-bold mb-4"><i class="fas fa-microscope me-2 text-primary"></i>Diagnostic Services</h4>
-                    <div class="row">
-                        <div class="col-6">
-                            <ul class="list-unstyled">
-                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i>Pathology Lab</li>
-                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i>X-Ray</li>
-                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i>Sonography</li>
-                            </ul>
-                        </div>
-                        <div class="col-6">
-                            <ul class="list-unstyled">
-                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i>ECG</li>
-                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i>Dialysis</li>
-                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i>Nebulization</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="p-5 bg-white rounded-4 shadow-sm facility-list-card">
-                    <h4 class="fw-bold mb-4"><i class="fas fa-hand-holding-medical me-2 text-primary"></i>Additional Facilities</h4>
-                    <div class="row">
-                        <div class="col-6">
-                            <ul class="list-unstyled">
-                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i>Physiotherapy</li>
-                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i>Medical Store</li>
-                            </ul>
-                        </div>
-                        <div class="col-6">
-                            <ul class="list-unstyled">
-                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i>AC Rooms</li>
-                                <li class="mb-3"><i class="fas fa-check text-success me-2"></i>Private Rooms</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- ═══ Director Section ═══ -->
+<section>
+  <div class="container">
+    <div style="display: flex; align-items: center; gap: 60px; flex-wrap: wrap;">
+      <div class="anim-hidden anim-left" data-delay="0" style="flex: 1 1 350px; text-align: center;">
+        <div style="position: relative; display: inline-block;">
+          <img src="{{ url_for('static', filename='image/dr.r.d.gupta.jpeg') }}" alt="Dr. R.D Gupta"
+               style="width: 340px; height: 340px; border-radius: 50%; object-fit: cover; border: 8px solid white; box-shadow: var(--shadow-xl);">
+          <div style="position: absolute; bottom: 10px; right: 10px; width: 64px; height: 64px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; border: 4px solid white;">
+            <i class="fas fa-user-md" style="color: white; font-size: 28px;"></i>
+          </div>
         </div>
+      </div>
+      <div class="anim-hidden anim-right" data-delay="0.1" style="flex: 1 1 450px;">
+        <span class="section-label"><i class="fas fa-user-tie"></i> Medical Director</span>
+        <h2 class="section-title">Dr. R.D Gupta</h2>
+        <p style="color: var(--primary); font-weight: 600; font-size: 1.1rem; margin-bottom: 20px;">Director, JJ Hospital</p>
+        <blockquote style="border-left: 4px solid var(--primary); padding-left: 24px; margin-bottom: 24px;">
+          <p style="font-size: 1.15rem; font-style: italic; color: var(--text-muted); line-height: 1.8;">
+            "At JJ Hospital, we believe in providing compassionate, comprehensive healthcare to every patient. Our commitment to excellence drives us to continuously improve our facilities and services."
+          </p>
+        </blockquote>
+        <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 28px;">
+          With years of experience in healthcare management, Dr. R.D Gupta has led JJ Hospital to become one of the most trusted healthcare providers in the Bilaspur region, ensuring quality medical care for all.
+        </p>
+        <a href="{{ url_for('booking_page') }}" class="btn btn-primary">
+          <i class="fas fa-calendar-check"></i> Book Appointment
+        </a>
+      </div>
     </div>
+  </div>
 </section>
 
-<section id="gallery" class="py-5 bg-light">
-    <div class="container py-5">
-        <div class="text-center mb-5">
-            <div class="badge bg-primary text-white px-4 py-3 mb-4">Gallery</div>
-            <h2 class="display-6 fw-bold section-title">Take a Tour of Our Hospital</h2>
-        </div>
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="gallery-item position-relative overflow-hidden rounded-4 shadow">
-                    <img src="{{ url_for('static', filename='image/hospital.jpg') }}" class="img-fluid w-100" alt="Hospital Exterior" style="height: 320px; object-fit: cover;">
-                    <div class="gallery-overlay">
-                        <div class="text-center text-white">
-                            <i class="fas fa-hospital fa-3x mb-3"></i>
-                            <h5 class="fw-bold">Main Building</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="gallery-item position-relative overflow-hidden rounded-4 shadow">
-                    <img src="{{ url_for('static', filename='image/hospital2.jpg') }}" class="img-fluid w-100" alt="Hospital Night View" style="height: 320px; object-fit: cover;">
-                    <div class="gallery-overlay">
-                        <div class="text-center text-white">
-                            <i class="fas fa-moon fa-3x mb-3"></i>
-                            <h5 class="fw-bold">Night View</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="gallery-item position-relative overflow-hidden rounded-4 shadow">
-                    <img src="{{ url_for('static', filename='image/night_view_of_the_hospital.jpeg') }}" class="img-fluid w-100" alt="Hospital Night" style="height: 320px; object-fit: cover;">
-                    <div class="gallery-overlay">
-                        <div class="text-center text-white">
-                            <i class="fas fa-city fa-3x mb-3"></i>
-                            <h5 class="fw-bold">Hospital at Night</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="gallery-item position-relative overflow-hidden rounded-4 shadow">
-                    <img src="{{ url_for('static', filename='image/billing&reception_counter.jpeg') }}" class="img-fluid w-100" alt="Billing Counter" style="height: 320px; object-fit: cover;">
-                    <div class="gallery-overlay">
-                        <div class="text-center text-white">
-                            <i class="fas fa-cash-register fa-3x mb-3"></i>
-                            <h5 class="fw-bold">Billing & Reception</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="gallery-item position-relative overflow-hidden rounded-4 shadow">
-                    <img src="{{ url_for('static', filename='image/main_gate_img_2.jpeg') }}" class="img-fluid w-100" alt="Main Gate" style="height: 320px; object-fit: cover;">
-                    <div class="gallery-overlay">
-                        <div class="text-center text-white">
-                            <i class="fas fa-door-open fa-3x mb-3"></i>
-                            <h5 class="fw-bold">Main Gate</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+<!-- ═══ Services Section ═══ -->
+<section id="services" style="background: var(--bg-light);">
+  <div class="container">
+    <div class="anim-hidden" data-delay="0" style="text-align: center; margin-bottom: 60px;">
+      <span class="section-label"><i class="fas fa-stethoscope"></i> Our Services</span>
+      <h2 class="section-title">Comprehensive Medical Services</h2>
+      <p class="section-subtitle" style="margin: 0 auto;">
+        From emergency care to specialized treatments, we offer a full range of medical services under one roof.
+      </p>
     </div>
+
+    <div class="services-grid">
+      {% set services = [
+        ('fa-ambulance', 'Emergency Care', '24/7 emergency medical services with rapid response and critical care.', '#ef4444'),
+        ('fa-heartbeat', 'Cardiac Care', 'Advanced cardiac diagnostics, treatment, and preventive cardiology services.', '#f59e0b'),
+        ('fa-lungs', 'ICU & Ventilator', 'Fully equipped ICU with modern ventilators and monitoring systems.', '#0ea5e9'),
+        ('fa-bone', 'Orthopedics', 'Comprehensive orthopedic care including surgeries, trauma, and rehabilitation.', '#10b981'),
+        ('fa-baby', 'Maternity Care', 'Complete maternity services from prenatal care to delivery and postpartum support.', '#ec4899'),
+        ('fa-kidneys', 'Urology', 'Diagnosis and treatment of urinary tract disorders and kidney conditions.', '#8b5cf6'),
+      ] %}
+      {% for icon, title, desc, color in services %}
+      <div class="card service-card anim-hidden" data-delay="{{ 0.08 * loop.index0 }}" style="border-top: 4px solid {{ color }};">
+        <div class="service-card-bg" style="background: {{ color }}08;"></div>
+        <div class="service-icon-box" style="background: {{ color }}12;">
+          <i class="fas {{ icon }}" style="color: {{ color }};"></i>
+        </div>
+        <h3 class="service-title">{{ title }}</h3>
+        <p class="service-desc">{{ desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </section>
 
-<section id="contact" class="py-5 bg-primary text-white">
-    <div class="container py-5">
-        <div class="row g-5">
-            <div class="col-lg-6">
-                <div class="badge bg-warning text-dark px-4 py-3 mb-4">Contact Us</div>
-                <h2 class="display-6 fw-bold mb-4">Get in Touch</h2>
-                <p class="mb-5 fs-5">For any inquiries or to book an appointment, please contact us using the information below.</p>
-                
-                <div class="contact-info">
-                    <div class="d-flex mb-4 align-items-start">
-                        <div class="me-4">
-                            <div class="bg-white rounded-circle p-3 text-primary">
-                                <i class="fas fa-map-marker-alt fa-2x"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <h5 class="fw-bold mb-2">Our Location</h5>
-                            <p class="mb-0 fs-5">Gurunanak Chowk, Arpa Bridge Road,<br>Towa, Bilaspur (C.G.)</p>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex mb-4 align-items-start">
-                        <div class="me-4">
-                            <div class="bg-white rounded-circle p-3 text-primary">
-                                <i class="fas fa-phone-alt fa-2x"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <h5 class="fw-bold mb-2">Phone Numbers</h5>
-                            <p class="mb-0 fs-5">Ph.: 07752-480680, 426148<br>Mob.: 9991991248</p>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex mb-4 align-items-start">
-                        <div class="me-4">
-                            <div class="bg-white rounded-circle p-3 text-primary">
-                                <i class="fas fa-clock fa-2x"></i>
-                            </div>
-                        </div>
-                        <div>
-                            <h5 class="fw-bold mb-2">Working Hours</h5>
-                            <p class="mb-0 fs-5">Emergency: 24/7<br>OPD: 9:00 AM - 9:00 PM</p>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="mt-5">
-                    <a href="tel:9991991248" class="btn btn-warning btn-lg me-3 mb-2">
-                        <i class="fas fa-phone-alt me-2"></i>Call Now
-                    </a>
-                    <a href="https://wa.me/919991991248" class="btn btn-success btn-lg mb-2" target="_blank">
-                        <i class="fab fa-whatsapp me-2"></i>WhatsApp
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="bg-white rounded-4 shadow-lg overflow-hidden">
-                    <iframe 
-                        src="https://www.google.com/maps?q=22.067734,82.1847655&output=embed" 
-                        width="100%" 
-                        height="500" 
-                        style="border:0;" 
-                        allowfullscreen="" 
-                        loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade"
-                        class="rounded">
-                    </iframe>
-                </div>
-            </div>
-        </div>
+<!-- ═══ Facilities Section ═══ -->
+<section id="facilities">
+  <div class="container">
+    <div class="anim-hidden" data-delay="0" style="text-align: center; margin-bottom: 60px;">
+      <span class="section-label"><i class="fas fa-building"></i> Our Facilities</span>
+      <h2 class="section-title">World-Class Facilities</h2>
+      <p class="section-subtitle" style="margin: 0 auto;">
+        Modern infrastructure designed for patient comfort and advanced medical care.
+      </p>
     </div>
+
+    <div class="facilities-grid">
+      {% set facilities = [
+        ('icu.jpeg', 'ICU & Critical Care'),
+        ('vantilator&dialasis_meachine.jpeg', 'Ventilator & Dialysis'),
+        ('hospital_bed.jpeg', 'Private Patient Rooms'),
+        ('x_ray_room.jpeg', 'X-Ray & Imaging'),
+        ('main_ot.jpeg', 'Main Operation Theatre'),
+        ('reception.jpeg', 'Reception & Billing'),
+        ('lift_facility.jpeg', 'Lift & Accessibility'),
+        ('ambulance.jpeg', 'Ambulance Service'),
+      ] %}
+      {% for img, title in facilities %}
+      <div class="facility-card anim-hidden" data-delay="{{ 0.05 * loop.index0 }}">
+        <img src="{{ url_for('static', filename='image/' + img) }}" alt="{{ title }}">
+        <div class="facility-card-overlay">
+          <h4>{{ title }}</h4>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </section>
 
-<div class="whatsapp-float">
-    <a href="https://wa.me/919991991248" target="_blank" class="btn btn-success rounded-circle shadow-lg">
-        <i class="fab fa-whatsapp fa-2x"></i>
-    </a>
+
+<!-- ═══ Gallery Section ═══ -->
+<section id="gallery" style="background: var(--bg-light);">
+  <div class="container">
+    <div class="anim-hidden" data-delay="0" style="text-align: center; margin-bottom: 60px;">
+      <span class="section-label"><i class="fas fa-images"></i> Gallery</span>
+      <h2 class="section-title">Our Hospital in Pictures</h2>
+      <p class="section-subtitle" style="margin: 0 auto;">
+        Take a visual tour of our facilities and infrastructure.
+      </p>
+    </div>
+
+    <div class="gallery-grid">
+      {% set gallery = [
+        ('hospital2.jpg',          'JJ Hospital - Night View',    'wide'),
+        ('main_gate_img_2.jpeg',   'Main Entrance',               ''),
+        ('main_ot.jpeg',           'Main Operation Theatre',      ''),
+        ('reception.jpeg',         'Reception Area',              ''),
+        ('icu.jpeg',               'ICU & Critical Care',         'tall'),
+        ('billing&reception_counter.jpeg', 'Billing Counter',     ''),
+        ('hospital_bed.jpeg',      'Private Patient Rooms',       ''),
+        ('x_ray_room.jpeg',        'X-Ray & Imaging',             ''),
+        ('vantilator&dialasis_meachine.jpeg', 'Ventilator & Dialysis', ''),
+        ('ambulance.jpeg',         'Ambulance Service',           ''),
+        ('night_view_of_the_hospital.jpeg', 'Hospital at Night',  ''),
+        ('lift_facility.jpeg',     'Lift & Accessibility',        ''),
+      ] %}
+      {% for img, title, cls in gallery %}
+      <div class="gallery-item {{ cls }} anim-hidden" data-delay="{{ 0.06 * loop.index0 }}" onclick="openLightbox(this)">
+        <img src="{{ url_for('static', filename='image/' + img) }}" alt="{{ title }}" data-title="{{ title }}">
+        <div class="gallery-item-overlay">
+          <h5>{{ title }}</h5>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" style="display: none;" onclick="closeLightbox(event)">
+  <img id="lightbox-img" src="" alt="">
+  <button class="lightbox-close" onclick="closeLightbox(event)"><i class="fas fa-times"></i></button>
 </div>
+
+
+<!-- ═══ Contact Section ═══ -->
+<section id="contact" style="background: var(--bg-light);">
+  <div class="container">
+    <div class="anim-hidden" data-delay="0" style="text-align: center; margin-bottom: 60px;">
+      <span class="section-label"><i class="fas fa-phone-alt"></i> Contact Us</span>
+      <h2 class="section-title">Get In Touch</h2>
+      <p class="section-subtitle" style="margin: 0 auto;">
+        We're here to help. Reach out to us for appointments, inquiries, or emergencies.
+      </p>
+    </div>
+
+    <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+      <div class="anim-hidden anim-left" data-delay="0" style="flex: 1 1 350px;">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div class="contact-item anim-hidden" data-delay="0">
+            <div class="contact-item-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div>
+              <div class="contact-item-label">Address</div>
+              <div class="contact-item-value">Gurunanak Chowk, Arpa Bridge Road, Towa, Bilaspur (C.G.)</div>
+            </div>
+          </div>
+          <div class="contact-item anim-hidden" data-delay="0.1">
+            <div class="contact-item-icon"><i class="fas fa-phone"></i></div>
+            <div>
+              <div class="contact-item-label">Phone</div>
+              <div class="contact-item-value">07752-480680, 426148</div>
+            </div>
+          </div>
+          <div class="contact-item anim-hidden" data-delay="0.2">
+            <div class="contact-item-icon"><i class="fas fa-mobile-alt"></i></div>
+            <div>
+              <div class="contact-item-label">Mobile</div>
+              <div class="contact-item-value">9991991248</div>
+            </div>
+          </div>
+          <div class="contact-item anim-hidden" data-delay="0.3">
+            <div class="contact-item-icon"><i class="fas fa-clock"></i></div>
+            <div>
+              <div class="contact-item-label">Working Hours</div>
+              <div class="contact-item-value">Emergency: 24/7<br>OPD: Mon-Sat 9:00 AM - 5:00 PM</div>
+            </div>
+          </div>
+        </div>
+
+        <a href="https://wa.me/919991991248" target="_blank" rel="noopener noreferrer"
+           class="btn btn-whatsapp anim-hidden" data-delay="0.2"
+           style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; padding: 18px; border-radius: 16px; font-size: 1rem; font-weight: 600; text-decoration: none; width: 100%;">
+          <i class="fab fa-whatsapp" style="font-size: 22px;"></i>
+          Chat on WhatsApp
+        </a>
+      </div>
+
+      <div class="anim-hidden anim-right" data-delay="0.1" style="flex: 1 1 450px; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-lg);">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3718.5!2d82.15!3d22.08!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjLCsDA0JzQ4LjAiTiA4MsKwMDknMDAuMCJF!5e0!3m2!1sen!2sin!4v1"
+          width="100%" height="420" style="border: 0; display: block;" allowfullscreen="" loading="lazy" title="JJ Hospital Location">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
 
 {% endblock %}

@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+.booking-section {
+    padding: 120px 0 80px;
+    background: linear-gradient(135deg, #f8f9f8 0%, #e8f5e9 100%);
+    min-height: 100vh;
+}
+.booking-card {
+    background: white;
+    border-radius: 24px;
+    padding: 50px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+    max-width: 800px;
+    margin: 0 auto;
+}
+.booking-card h2 {
+    font-weight: 700;
+    color: #198754;
+    margin-bottom: 10px;
+}
+.booking-card .subtitle {
+    color: #666;
+    margin-bottom: 35px;
+}
+.booking-card .form-control, .booking-card .form-select {
+    border-radius: 12px;
+    padding: 14px 18px;
+    border: 2px solid #e0e0e0;
+    font-size: 0.95rem;
+}
+.booking-card .form-control:focus, .booking-card .form-select:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 3px rgba(25,135,84,0.15);
+}
+.booking-card .form-label {
+    font-weight: 500;
+    color: #444;
+    font-size: 0.9rem;
+}
+.booking-card textarea { resize: vertical; min-height: 100px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="booking-section">
+    <div class="container">
+        <div class="booking-card">
+            <h2><i class="fas fa-calendar-plus me-2"></i>Book an Appointment</h2>
+            <p class="subtitle">Fill in the form below and we will contact you shortly</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show">{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('submit_booking') }}">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Patient Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                        <input type="tel" name="phone" class="form-control" placeholder="Mobile Number" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" placeholder="email@example.com">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Appointment Date</label>
+                        <input type="date" name="booking_date" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Department</label>
+                        <select name="department" class="form-select">
+                            <option value="">-- Select --</option>
+                            <option value="Emergency">Emergency</option>
+                            <option value="Cardiac Care">Cardiac Care</option>
+                            <option value="ICU">ICU</option>
+                            <option value="Orthopedics">Orthopedics</option>
+                            <option value="Maternity">Maternity</option>
+                            <option value="Urology">Urology</option>
+                            <option value="General">General</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Doctor</label>
+                        <input type="text" name="doctor" class="form-control" placeholder="Doctor's Name">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Address</label>
+                        <textarea name="address" class="form-control" rows="2" placeholder="Your Address"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Any Special Message</label>
+                        <textarea name="message" class="form-control" rows="3" placeholder="Your Message"></textarea>
+                    </div>
+                    <div class="col-12 text-center mt-4">
+                        <button type="submit" class="btn btn-success btn-lg px-5">
+                            <i class="fas fa-paper-plane me-2"></i> Book Appointment
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
