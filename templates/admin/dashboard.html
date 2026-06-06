@@ -35,50 +35,24 @@
 </div>
 <div class="row g-4 mb-4">
     <div class="col-md-4">
-        <div class="stat-card position-relative" style="border-left-color: #198754;">
-            <i class="fas fa-dollar-sign stat-icon" style="color: #198754;"></i>
-            <div class="stat-number" style="color: #198754;">₹{{ "%.0f"|format(pharmacy_income) }}</div>
-            <div class="stat-label">Pharmacy Income</div>
-        </div>
-    </div>
-    <div class="col-md-4">
         <div class="stat-card position-relative" style="border-left-color: #0d6efd;">
             <i class="fas fa-flask stat-icon" style="color: #0d6efd;"></i>
-            <div class="stat-number" style="color: #0d6efd;">₹{{ "%.0f"|format(lab_income) }}</div>
-            <div class="stat-label">Lab Income</div>
+            <div class="stat-number" style="color: #0d6efd;">{{ total_lab_tests }}</div>
+            <div class="stat-label">Total Lab Tests</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="stat-card position-relative" style="border-left-color: #6f42c1;">
             <i class="fas fa-chart-line stat-icon" style="color: #6f42c1;"></i>
-            <div class="stat-number" style="color: #6f42c1;">₹{{ "%.0f"|format(total_income) }}</div>
-            <div class="stat-label">Total Income</div>
-        </div>
-    </div>
-</div>
-{% endif %}
-
-{% if role == 'pharmacy' %}
-<div class="row g-4 mb-4">
-    <div class="col-md-4">
-        <div class="stat-card position-relative">
-            <i class="fas fa-calendar-check stat-icon"></i>
-            <div class="stat-number">{{ total_bookings }}</div>
-            <div class="stat-label">Total Bookings</div>
+            <div class="stat-number" style="color: #6f42c1;">₹{{ "%.0f"|format(total_lab_amount) }}</div>
+            <div class="stat-label">Lab Revenue</div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="stat-card position-relative" style="border-left-color: #198754;">
-            <i class="fas fa-dollar-sign stat-icon" style="color: #198754;"></i>
-            <div class="stat-number" style="color: #198754;">₹{{ "%.0f"|format(pharmacy_income) }}</div>
-            <div class="stat-label">Pharmacy Income</div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="stat-card position-relative" style="border-left-color: #dc3545;">
-            <i class="fas fa-procedures stat-icon" style="color: #dc3545;"></i>
-            <div class="stat-number" style="color: #dc3545;">{{ total_referrals }}</div>
-            <div class="stat-label">Total Referrals</div>
+            <i class="fas fa-hourglass-half stat-icon" style="color: #198754;"></i>
+            <div class="stat-number" style="color: #198754;">{{ pending_lab_tests }}</div>
+            <div class="stat-label">Pending Tests</div>
         </div>
     </div>
 </div>
@@ -86,25 +60,32 @@
 
 {% if role == 'lab' %}
 <div class="row g-4 mb-4">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="stat-card position-relative">
-            <i class="fas fa-calendar-check stat-icon"></i>
-            <div class="stat-number">{{ total_bookings }}</div>
-            <div class="stat-label">Total Bookings</div>
+            <i class="fas fa-flask stat-icon"></i>
+            <div class="stat-number">{{ total_lab_tests }}</div>
+            <div class="stat-label">Total Lab Tests</div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="stat-card position-relative" style="border-left-color: #0d6efd;">
-            <i class="fas fa-flask stat-icon" style="color: #0d6efd;"></i>
-            <div class="stat-number" style="color: #0d6efd;">₹{{ "%.0f"|format(lab_income) }}</div>
-            <div class="stat-label">Lab Income</div>
+    <div class="col-md-3">
+        <div class="stat-card position-relative" style="border-left-color: #ffc107;">
+            <i class="fas fa-calendar-day stat-icon" style="color: #ffc107;"></i>
+            <div class="stat-number" style="color: #ffc107;">{{ today_lab_tests }}</div>
+            <div class="stat-label">Today's Tests</div>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="stat-card position-relative" style="border-left-color: #dc3545;">
-            <i class="fas fa-procedures stat-icon" style="color: #dc3545;"></i>
-            <div class="stat-number" style="color: #dc3545;">{{ total_referrals }}</div>
-            <div class="stat-label">Total Referrals</div>
+            <i class="fas fa-hourglass-half stat-icon" style="color: #dc3545;"></i>
+            <div class="stat-number" style="color: #dc3545;">{{ pending_lab_tests }}</div>
+            <div class="stat-label">Pending Tests</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card position-relative" style="border-left-color: #6f42c1;">
+            <i class="fas fa-rupee-sign stat-icon" style="color: #6f42c1;"></i>
+            <div class="stat-number" style="color: #6f42c1;">₹{{ "%.0f"|format(total_lab_amount) }}</div>
+            <div class="stat-label">Total Revenue</div>
         </div>
     </div>
 </div>
@@ -121,8 +102,8 @@
     </div>
     <div class="col-md-4">
         <div class="stat-card position-relative" style="border-left-color: #198754;">
-            <i class="fas fa-dollar-sign stat-icon" style="color: #198754;"></i>
-            <div class="stat-number" style="color: #198754;">₹{{ "%.0f"|format(total_income) }}</div>
+            <i class="fas fa-rupee-sign stat-icon" style="color: #198754;"></i>
+            <div class="stat-number" style="color: #198754;">₹{{ "%.0f"|format(lab_income) }}</div>
             <div class="stat-label">Total Referral Income</div>
         </div>
     </div>
@@ -169,13 +150,13 @@
 </div>
 {% endif %}
 
-{% if role in ['main_admin', 'pharmacy', 'lab'] %}
+{% if role in ['main_admin', 'lab'] %}
 <div class="row">
     <div class="col-lg-12">
         <div class="table-container">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold m-0"><i class="fas fa-clock me-2 text-success"></i>Recent Bookings</h5>
-                <a href="{{ url_for('admin_bookings') }}" class="btn btn-success btn-sm">View All <i class="fas fa-arrow-right ms-1"></i></a>
+                <h5 class="fw-bold m-0"><i class="fas fa-flask me-2 text-info"></i>Recent Lab Tests</h5>
+                <a href="{{ url_for('admin_lab_tests') }}" class="btn btn-info btn-sm">View All <i class="fas fa-arrow-right ms-1"></i></a>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
@@ -183,27 +164,30 @@
                         <tr>
                             <th>#</th>
                             <th>Patient</th>
-                            <th>Phone</th>
-                            <th>Department</th>
-                            <th>Doctor</th>
+                            <th>Test Name</th>
+                            <th>Amount (₹)</th>
+                            <th>Status</th>
                             <th>Date</th>
-                            <th>Time</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for b in recent_bookings %}
+                        {% for t in recent_lab_tests %}
                         <tr>
-                            <td>{{ b.id }}</td>
-                            <td><strong>{{ b.patient_name }}</strong></td>
-                            <td>{{ b.phone }}</td>
-                            <td>{{ b.department or '-' }}</td>
-                            <td>{{ b.doctor or '-' }}</td>
-                            <td>{{ b.booking_date or '-' }}</td>
-                            <td><small class="text-muted">{{ b.created_at.strftime('%d-%m-%Y %H:%M') }}</small></td>
+                            <td>{{ t.id }}</td>
+                            <td><strong>{{ t.patient_name }}</strong></td>
+                            <td>{{ t.test_name }}</td>
+                            <td>₹{{ "%.0f"|format(t.amount) }}</td>
+                            <td>
+                                {% if t.status == 'Completed' %}<span class="badge bg-success">{{ t.status }}</span>
+                                {% elif t.status == 'Pending' %}<span class="badge bg-warning text-dark">{{ t.status }}</span>
+                                {% elif t.status == 'Cancelled' %}<span class="badge bg-danger">{{ t.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td><small class="text-muted">{{ t.test_date.strftime('%d-%m-%Y') if t.test_date else '-' }}</small></td>
                         </tr>
                         {% endfor %}
-                        {% if not recent_bookings %}
-                        <tr><td colspan="7" class="text-center text-muted py-4">No bookings yet</td></tr>
+                        {% if not recent_lab_tests %}
+                        <tr><td colspan="6" class="text-center text-muted py-4">No lab tests yet</td></tr>
                         {% endif %}
                     </tbody>
                 </table>
@@ -213,8 +197,44 @@
 </div>
 {% endif %}
 
+{% if role in ['main_admin', 'lab'] %}
 <div class="row mt-4">
-    {% if role in ['main_admin', 'hr'] %}
+    <div class="col-md-6">
+        <div class="table-container text-center py-4">
+            <i class="fas fa-flask fa-3x text-info mb-3"></i>
+            <h5 class="fw-bold">Lab Tests</h5>
+            <p class="text-muted">Manage patient lab test records</p>
+            <a href="{{ url_for('admin_lab_tests') }}" class="btn btn-info btn-sm"><i class="fas fa-arrow-right me-1"></i> Go</a>
+        </div>
+    </div>
+    {% if role == 'main_admin' %}
+    <div class="col-md-6">
+        <div class="table-container text-center py-4">
+            <i class="fas fa-user-shield fa-3x text-success mb-3"></i>
+            <h5 class="fw-bold">Admin Management</h5>
+            <p class="text-muted">Manage admins & reset passwords</p>
+            <a href="{{ url_for('admin_management') }}" class="btn btn-success btn-sm"><i class="fas fa-arrow-right me-1"></i> Go</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if role == 'referral' %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="table-container text-center py-4">
+            <i class="fas fa-procedures fa-3x text-danger mb-3"></i>
+            <h5 class="fw-bold">Referral Records</h5>
+            <p class="text-muted">MRI, CT Scan, Sonography, Lab, X-Ray records</p>
+            <a href="{{ url_for('admin_referrals') }}" class="btn btn-danger btn-sm"><i class="fas fa-arrow-right me-1"></i> Go</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if role == 'hr' %}
+<div class="row mt-4">
     <div class="col-md-6">
         <div class="table-container text-center py-4">
             <i class="fas fa-users fa-3x text-success mb-3"></i>
@@ -223,16 +243,14 @@
             <a href="{{ url_for('admin_staff') }}" class="btn btn-success btn-sm"><i class="fas fa-arrow-right me-1"></i> Go</a>
         </div>
     </div>
-    {% endif %}
-    {% if role in ['main_admin', 'pharmacy', 'lab', 'referral'] %}
     <div class="col-md-6">
         <div class="table-container text-center py-4">
-            <i class="fas fa-procedures fa-3x text-danger mb-3"></i>
-            <h5 class="fw-bold">Referral Records</h5>
-            <p class="text-muted">MRI, CT Scan, Sonography, Lab, X-Ray records</p>
-            <a href="{{ url_for('admin_referrals') }}" class="btn btn-danger btn-sm"><i class="fas fa-arrow-right me-1"></i> Go</a>
+            <i class="fas fa-clipboard-list fa-3x text-primary mb-3"></i>
+            <h5 class="fw-bold">Attendance</h5>
+            <p class="text-muted">Mark and manage daily attendance</p>
+            <a href="{{ url_for('admin_attendance') }}" class="btn btn-primary btn-sm"><i class="fas fa-arrow-right me-1"></i> Go</a>
         </div>
     </div>
-    {% endif %}
 </div>
+{% endif %}
 {% endblock %}

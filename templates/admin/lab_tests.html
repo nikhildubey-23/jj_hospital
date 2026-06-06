@@ -1,0 +1,69 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<div class="table-container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <h5 class="fw-bold m-0"><i class="fas fa-flask me-2 text-info"></i>Lab Test Records</h5>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('add_lab_test') }}" class="btn btn-info btn-sm"><i class="fas fa-plus me-1"></i> New Test</a>
+            <a href="{{ url_for('export_lab_tests_csv') }}{% if status_filter %}?status={{ status_filter }}{% endif %}" class="btn btn-outline-info btn-sm"><i class="fas fa-download"></i> CSV</a>
+        </div>
+    </div>
+
+    <form method="GET" class="d-flex gap-2 flex-wrap mb-3">
+        <input type="text" name="search" class="form-control form-control-sm search-box" placeholder="Patient / Test / Phone..." value="{{ search }}">
+        <select name="status" class="form-select form-select-sm" style="width:150px;">
+            <option value="">All Status</option>
+            {% for s in statuses %}
+            <option value="{{ s }}" {% if status_filter == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-info btn-sm"><i class="fas fa-search"></i></button>
+        {% if search or status_filter %}<a href="{{ url_for('admin_lab_tests') }}" class="btn btn-outline-secondary btn-sm">Clear</a>{% endif %}
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Patient</th>
+                    <th>Phone</th>
+                    <th>Test Name</th>
+                    <th>Amount (₹)</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tests %}
+                <tr>
+                    <td>{{ t.id }}</td>
+                    <td><strong>{{ t.patient_name }}</strong></td>
+                    <td>{{ t.phone or '-' }}</td>
+                    <td>{{ t.test_name }}</td>
+                    <td><strong>₹{{ "%.2f"|format(t.amount) }}</strong></td>
+                    <td>
+                        {% if t.status == 'Completed' %}<span class="badge bg-success">{{ t.status }}</span>
+                        {% elif t.status == 'Pending' %}<span class="badge bg-warning text-dark">{{ t.status }}</span>
+                        {% elif t.status == 'Cancelled' %}<span class="badge bg-danger">{{ t.status }}</span>
+                        {% else %}<span class="badge bg-secondary">{{ t.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ t.test_date.strftime('%d-%m-%Y') if t.test_date else '-' }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_lab_test', id=t.id) }}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="fas fa-edit"></i></a>
+                        <form method="POST" action="{{ url_for('delete_lab_test', id=t.id) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this test record?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% if not tests %}
+                <tr><td colspan="8" class="text-center text-muted py-5">No lab test records found</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

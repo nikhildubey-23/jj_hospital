@@ -1,0 +1,55 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<div class="form-card">
+    <h5 class="fw-bold mb-4">
+        {% if test %}
+        <i class="fas fa-edit me-2 text-info"></i>Edit Lab Test
+        {% else %}
+        <i class="fas fa-plus-circle me-2 text-info"></i>New Lab Test
+        {% endif %}
+    </h5>
+    <form method="POST">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Patient Name <span class="text-danger">*</span></label>
+                <input type="text" name="patient_name" class="form-control" value="{{ test.patient_name if test else '' }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Phone</label>
+                <input type="text" name="phone" class="form-control" value="{{ test.phone if test else '' }}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Test Name <span class="text-danger">*</span></label>
+                <input type="text" name="test_name" class="form-control" value="{{ test.test_name if test else '' }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Amount (₹)</label>
+                <input type="number" step="0.01" name="amount" class="form-control" value="{{ test.amount if test else '0' }}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Test Date</label>
+                <input type="date" name="test_date" class="form-control" value="{{ test.test_date if test else '' }}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Status</label>
+                <select name="status" class="form-select">
+                    {% for s in statuses %}
+                    <option value="{{ s }}" {% if test and test.status == s %}selected{% endif %}>{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Notes</label>
+                <textarea name="notes" class="form-control" rows="3">{{ test.notes if test else '' }}</textarea>
+            </div>
+            <div class="col-12 mt-4">
+                <button type="submit" class="btn btn-info">
+                    <i class="fas fa-save me-1"></i>
+                    {% if test %}Update{% else %}Save{% endif %}
+                </button>
+                <a href="{{ url_for('admin_lab_tests') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

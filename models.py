@@ -56,3 +56,14 @@ class Referral(db.Model):
     referral_date = db.Column(db.Date)
     notes = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class LabTest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    patient_name = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20))
+    test_name = db.Column(db.String(100), nullable=False)
+    amount = db.Column(db.Float, default=0.0)
+    test_date = db.Column(db.Date, default=datetime.utcnow)
+    notes = db.Column(db.Text)
+    status = db.Column(db.String(20), default='Pending')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)

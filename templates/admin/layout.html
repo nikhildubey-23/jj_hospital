@@ -119,9 +119,14 @@
                 <i class="fas fa-th-large"></i><span>Dashboard</span>
             </a>
             {% set role = session.admin_role %}
-            {% if role in ['main_admin', 'pharmacy', 'lab'] %}
+            {% if role in ['main_admin', 'lab'] %}
             <a href="{{ url_for('admin_bookings') }}" class="nav-link {% if request.endpoint in ['admin_bookings'] %}active{% endif %}">
                 <i class="fas fa-calendar-check"></i><span>Bookings</span>
+            </a>
+            {% endif %}
+            {% if role in ['main_admin', 'lab'] %}
+            <a href="{{ url_for('admin_lab_tests') }}" class="nav-link {% if request.endpoint in ['admin_lab_tests', 'add_lab_test', 'edit_lab_test'] %}active{% endif %}">
+                <i class="fas fa-flask"></i><span>Lab Tests</span>
             </a>
             {% endif %}
             {% if role in ['main_admin', 'hr'] %}
@@ -135,12 +140,17 @@
                 <i class="fas fa-file-alt"></i><span>Attendance Report</span>
             </a>
             {% endif %}
-            {% if role in ['main_admin', 'pharmacy', 'lab', 'referral'] %}
+            {% if role in ['main_admin', 'referral'] %}
             <a href="{{ url_for('admin_referrals') }}" class="nav-link {% if request.endpoint in ['admin_referrals', 'add_referral', 'edit_referral'] %}active{% endif %}">
                 <i class="fas fa-procedures"></i><span>Referrals</span>
             </a>
             {% endif %}
-            {% if role in ['main_admin', 'pharmacy', 'lab', 'referral', 'hr'] %}
+            {% if role == 'main_admin' %}
+            <a href="{{ url_for('admin_management') }}" class="nav-link {% if request.endpoint == 'admin_management' %}active{% endif %}">
+                <i class="fas fa-user-shield"></i><span>Admin Management</span>
+            </a>
+            {% endif %}
+            {% if role in ['main_admin', 'lab', 'referral', 'hr'] %}
             <a href="{{ url_for('admin_settings') }}" class="nav-link {% if request.endpoint == 'admin_settings' %}active{% endif %}">
                 <i class="fas fa-cog"></i><span>Settings</span>
             </a>
@@ -166,13 +176,16 @@
                 {% elif request.endpoint == 'attendance_report' %}Attendance Report
                 {% elif request.endpoint in ['admin_referrals'] %}Referral Management
                 {% elif request.endpoint in ['add_referral', 'edit_referral'] %}Referral Form
+                {% elif request.endpoint in ['admin_lab_tests'] %}Lab Tests
+                {% elif request.endpoint in ['add_lab_test', 'edit_lab_test'] %}Lab Test Form
+                {% elif request.endpoint == 'admin_management' %}Admin Management
                 {% elif request.endpoint == 'admin_settings' %}Settings
                 {% else %}Admin Panel
                 {% endif %}
             </h4>
             <div class="admin-info">
                 <span><i class="fas fa-user-circle me-1"></i> {{ session.admin_username }}</span>
-                <span class="badge bg-{{ 'success' if session.admin_role == 'main_admin' else 'primary' if session.admin_role == 'pharmacy' else 'info' if session.admin_role == 'lab' else 'warning' if session.admin_role == 'referral' else 'secondary' }} rounded-pill">{{ session.admin_role|replace('_', ' ')|title }}</span>
+                <span class="badge bg-{{ 'success' if session.admin_role == 'main_admin' else 'info' if session.admin_role == 'lab' else 'warning' if session.admin_role == 'referral' else 'secondary' }} rounded-pill">{{ session.admin_role|replace('_', ' ')|title }}</span>
             </div>
         </div>
 

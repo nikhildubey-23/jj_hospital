@@ -14,7 +14,7 @@ from flask import (
 )
 from flask_cors import CORS
 from config import Config
-from models import db, Admin, Booking, Staff, Attendance, Referral
+from models import db, Admin, Booking, Staff, Attendance, Referral, LabTest
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -197,15 +197,19 @@ def admin_dashboard():
     ).count()
     recent_bookings = Booking.query.order_by(Booking.created_at.desc()).limit(5).all()
 
-    pharmacy_income = db.session.query(db.func.sum(Referral.charge)).filter(
-        Referral.referral_type == 'Lab'
-    ).scalar() or 0.0
+    total_lab_tests = LabTest.query.count()
+    total_lab_amount = db.session.query(db.func.sum(LabTest.amount)).scalar() or 0.0
+    today_lab_tests = LabTest.query.filter(
+        db.func.date(LabTest.created_at) == today
+    ).count()
+    pending_lab_tests = LabTest.query.filter_by(status='Pending').count()
+    recent_lab_tests = LabTest.query.order_by(LabTest.created_at.desc()).limit(5).all()
 
     lab_income = db.session.query(db.func.sum(Referral.charge)).filter(
         Referral.referral_type == 'Lab'
     ).scalar() or 0.0
 
-    total_income = pharmacy_income + lab_income
+    total_income = total_lab_amount + lab_income
 
     today_present = Attendance.query.filter(
         Attendance.date == today, Attendance.status == 'Present'
@@ -221,9 +225,13 @@ def admin_dashboard():
         today_bookings=today_bookings,
         recent_bookings=recent_bookings,
         role=role,
-        pharmacy_income=pharmacy_income,
         lab_income=lab_income,
         total_income=total_income,
+        total_lab_tests=total_lab_tests,
+        total_lab_amount=total_lab_amount,
+        today_lab_tests=today_lab_tests,
+        pending_lab_tests=pending_lab_tests,
+        recent_lab_tests=recent_lab_tests,
         today_present=today_present,
         today_absent=today_absent)
 
@@ -231,7 +239,7 @@ def admin_dashboard():
 
 @app.route('/admin/bookings')
 @login_required
-@role_required('main_admin', 'pharmacy', 'lab')
+@role_required('main_admin', 'lab')
 def admin_bookings():
     search = request.args.get('search', '')
     query = Booking.query
@@ -257,7 +265,7 @@ def delete_booking(id):
 
 @app.route('/admin/bookings/export')
 @login_required
-@role_required('main_admin', 'pharmacy', 'lab')
+@role_required('main_admin', 'lab')
 def export_bookings_csv():
     bookings = Booking.query.order_by(Booking.created_at.desc()).all()
     output = io.StringIO()
@@ -453,7 +461,7 @@ REFERRAL_TYPES = ['MRI', 'CT Scan', 'Sonography', 'Lab', 'X-Ray']
 
 @app.route('/admin/referrals')
 @login_required
-@role_required('main_admin', 'pharmacy', 'lab', 'referral')
+@role_required('main_admin', 'referral')
 def admin_referrals():
     search = request.args.get('search', '')
     rtype = request.args.get('type', '')
@@ -474,7 +482,7 @@ def admin_referrals():
 
 @app.route('/admin/referrals/add', methods=['GET', 'POST'])
 @login_required
-@role_required('main_admin', 'pharmacy', 'lab', 'referral')
+@role_required('main_admin', 'referral')
 def add_referral():
     if request.method == 'POST':
         patient_name = request.form.get('patient_name')
@@ -512,7 +520,7 @@ def add_referral():
 
 @app.route('/admin/referrals/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
-@role_required('main_admin', 'pharmacy', 'lab', 'referral')
+@role_required('main_admin', 'referral')
 def edit_referral(id):
     referral = Referral.query.get_or_404(id)
     if request.method == 'POST':
@@ -538,7 +546,7 @@ def edit_referral(id):
 
 @app.route('/admin/referrals/delete/<int:id>', methods=['POST'])
 @login_required
-@role_required('main_admin', 'pharmacy', 'lab', 'referral')
+@role_required('main_admin', 'referral')
 def delete_referral(id):
     referral = Referral.query.get_or_404(id)
     db.session.delete(referral)
@@ -548,7 +556,7 @@ def delete_referral(id):
 
 @app.route('/admin/referrals/export')
 @login_required
-@role_required('main_admin', 'pharmacy', 'lab', 'referral')
+@role_required('main_admin', 'referral')
 def export_referrals_csv():
     rtype = request.args.get('type', '')
     query = Referral.query
@@ -565,11 +573,153 @@ def export_referrals_csv():
     return Response(output.getvalue(), mimetype='text/csv',
                     headers={'Content-Disposition': 'attachment;filename=referrals.csv'})
 
+# ─── Lab Tests ──────────────────────────────────────────────────────────────
+
+LAB_TEST_STATUSES = ['Pending', 'Completed', 'Cancelled']
+
+@app.route('/admin/lab-tests')
+@login_required
+@role_required('main_admin', 'lab')
+def admin_lab_tests():
+    search = request.args.get('search', '')
+    status_filter = request.args.get('status', '')
+    query = LabTest.query
+    if search:
+        query = query.filter(
+            db.or_(
+                LabTest.patient_name.contains(search),
+                LabTest.test_name.contains(search),
+                LabTest.phone.contains(search)
+            )
+        )
+    if status_filter:
+        query = query.filter_by(status=status_filter)
+    tests = query.order_by(LabTest.created_at.desc()).all()
+    return render_template('admin/lab_tests.html',
+        tests=tests, search=search, status_filter=status_filter, statuses=LAB_TEST_STATUSES)
+
+@app.route('/admin/lab-tests/add', methods=['GET', 'POST'])
+@login_required
+@role_required('main_admin', 'lab')
+def add_lab_test():
+    if request.method == 'POST':
+        patient_name = request.form.get('patient_name')
+        phone = request.form.get('phone')
+        test_name = request.form.get('test_name')
+        amount = request.form.get('amount', 0)
+        test_date = request.form.get('test_date')
+        notes = request.form.get('notes')
+        status = request.form.get('status', 'Pending')
+
+        if not patient_name or not test_name:
+            flash('Patient name and test name are required', 'danger')
+            return render_template('admin/lab_test_form.html', test=None, statuses=LAB_TEST_STATUSES)
+
+        try:
+            test_date_parsed = datetime.strptime(test_date, '%Y-%m-%d').date() if test_date else date.today()
+        except:
+            test_date_parsed = date.today()
+
+        try:
+            amount_val = float(amount) if amount else 0.0
+        except:
+            amount_val = 0.0
+
+        lab_test = LabTest(
+            patient_name=patient_name, phone=phone,
+            test_name=test_name, amount=amount_val,
+            test_date=test_date_parsed, notes=notes,
+            status=status
+        )
+        db.session.add(lab_test)
+        db.session.commit()
+        flash('Lab test record added successfully', 'success')
+        return redirect(url_for('admin_lab_tests'))
+    return render_template('admin/lab_test_form.html', test=None, statuses=LAB_TEST_STATUSES)
+
+@app.route('/admin/lab-tests/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+@role_required('main_admin', 'lab')
+def edit_lab_test(id):
+    lab_test = LabTest.query.get_or_404(id)
+    if request.method == 'POST':
+        lab_test.patient_name = request.form.get('patient_name')
+        lab_test.phone = request.form.get('phone')
+        lab_test.test_name = request.form.get('test_name')
+        amount = request.form.get('amount', 0)
+        try:
+            lab_test.amount = float(amount) if amount else 0.0
+        except:
+            lab_test.amount = 0.0
+        test_date = request.form.get('test_date')
+        try:
+            lab_test.test_date = datetime.strptime(test_date, '%Y-%m-%d').date() if test_date else date.today()
+        except:
+            pass
+        lab_test.notes = request.form.get('notes')
+        lab_test.status = request.form.get('status', 'Pending')
+        db.session.commit()
+        flash('Lab test record updated successfully', 'success')
+        return redirect(url_for('admin_lab_tests'))
+    return render_template('admin/lab_test_form.html', test=lab_test, statuses=LAB_TEST_STATUSES)
+
+@app.route('/admin/lab-tests/delete/<int:id>', methods=['POST'])
+@login_required
+@role_required('main_admin', 'lab')
+def delete_lab_test(id):
+    lab_test = LabTest.query.get_or_404(id)
+    db.session.delete(lab_test)
+    db.session.commit()
+    flash('Lab test record deleted successfully', 'success')
+    return redirect(url_for('admin_lab_tests'))
+
+@app.route('/admin/lab-tests/export')
+@login_required
+@role_required('main_admin', 'lab')
+def export_lab_tests_csv():
+    status_filter = request.args.get('status', '')
+    query = LabTest.query
+    if status_filter:
+        query = query.filter_by(status=status_filter)
+    tests = query.order_by(LabTest.created_at.desc()).all()
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['ID', 'Patient Name', 'Phone', 'Test Name', 'Amount (₹)', 'Test Date', 'Status', 'Notes', 'Created At'])
+    for t in tests:
+        writer.writerow([t.id, t.patient_name, t.phone, t.test_name,
+                        t.amount, t.test_date, t.status, t.notes, t.created_at])
+    output.seek(0)
+    return Response(output.getvalue(), mimetype='text/csv',
+                    headers={'Content-Disposition': 'attachment;filename=lab_tests.csv'})
+
+# ─── Admin Management ───────────────────────────────────────────────────────
+
+@app.route('/admin/admins')
+@login_required
+@role_required('main_admin')
+def admin_management():
+    admins = Admin.query.order_by(Admin.role, Admin.username).all()
+    return render_template('admin/admin_management.html', admins=admins)
+
+@app.route('/admin/admins/reset-password/<int:id>', methods=['POST'])
+@login_required
+@role_required('main_admin')
+def reset_admin_password(id):
+    admin = Admin.query.get_or_404(id)
+    new_password = request.form.get('new_password', '').strip()
+    if not new_password or len(new_password) < 4:
+        flash('Password must be at least 4 characters', 'danger')
+        return redirect(url_for('admin_management'))
+    admin.set_password(new_password)
+    db.session.commit()
+    flash(f'Password reset successfully for {admin.username}', 'success')
+    return redirect(url_for('admin_management'))
+
 # ─── Settings ───────────────────────────────────────────────────────────────
 
 @app.route('/admin/settings', methods=['GET', 'POST'])
 @login_required
-@role_required('main_admin', 'pharmacy', 'lab', 'referral', 'hr')
+@role_required('main_admin', 'lab', 'referral', 'hr')
 def admin_settings():
     if request.method == 'POST':
         session['mail_username'] = request.form.get('mail_username', '')
@@ -581,7 +731,7 @@ def admin_settings():
 
 @app.route('/admin/settings/test-email')
 @login_required
-@role_required('main_admin', 'pharmacy', 'lab', 'referral', 'hr')
+@role_required('main_admin', 'lab', 'referral', 'hr')
 def test_email():
     smtp_server = session.get('mail_username', '')
     smtp_password = session.get('mail_password', '')
@@ -617,7 +767,6 @@ with app.app_context():
     if not Admin.query.first():
         seed_admins = [
             ('main_admin', 'admin123', 'main_admin'),
-            ('pharmacy_admin', 'admin123', 'pharmacy'),
             ('lab_admin', 'admin123', 'lab'),
             ('referral_admin', 'admin123', 'referral'),
             ('hr_admin', 'admin123', 'hr'),
@@ -629,7 +778,6 @@ with app.app_context():
         db.session.commit()
         print('Admin accounts created:')
         print('  main_admin / admin123 (main_admin)')
-        print('  pharmacy_admin / admin123 (pharmacy)')
         print('  lab_admin / admin123 (lab)')
         print('  referral_admin / admin123 (referral)')
         print('  hr_admin / admin123 (hr)')
