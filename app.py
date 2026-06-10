@@ -158,6 +158,44 @@ def api_submit_booking():
 
     return jsonify({'message': 'Booking successful'}), 200
 
+# ─── SEO ────────────────────────────────────────────────────────────────────
+
+@app.route('/robots.txt')
+def robots_txt():
+    domain = request.host_url.rstrip('/')
+    content = f"""User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: {domain}/sitemap.xml
+"""
+    return Response(content, mimetype='text/plain')
+
+
+@app.route('/sitemap.xml')
+def sitemap_xml():
+    domain = request.host_url.rstrip('/')
+    today = date.today().isoformat()
+    content = f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{domain}/</loc>
+    <lastmod>{today}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>{domain}/booking</loc>
+    <lastmod>{today}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
+"""
+    return Response(content, mimetype='application/xml')
+
+
 # ─── Admin Auth ─────────────────────────────────────────────────────────────
 
 @app.route('/admin/login', methods=['GET', 'POST'])
